@@ -1,29 +1,20 @@
-import { GetServerSideProps } from "next";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { loginWithTwitter, getAuth, logout } from "~/lib/firebase";
-
-type Props = {};
-
-export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
-  return {
-    props: {},
-  };
-};
+import { useAuthState } from "~/lib/auth"
+import { loginWithTwitter, logout } from "~/lib/firebase"
 
 const Index = () => {
-  const [user, loading] = useAuthState(getAuth());
+  const [user, loading] = useAuthState()
   return (
     <main>
       {!loading && user ? (
         <>
           <button onClick={() => logout()}>Logout</button>
-          <div>Hello {JSON.stringify(user)}</div>
+          <div>Hello {user.displayName}</div>
         </>
       ) : (
         <button onClick={() => loginWithTwitter()}>Login</button>
       )}
     </main>
-  );
-};
+  )
+}
 
 export default Index
