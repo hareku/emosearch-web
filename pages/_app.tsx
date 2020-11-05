@@ -10,7 +10,7 @@ import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
-import Link from "~/components/atoms/Link"
+import Link from "@material-ui/core/Link"
 import { loginWithTwitter, logout } from "~/lib/firebase"
 
 export default function MyApp(props: AppProps) {
@@ -62,20 +62,33 @@ function Layout({ children }: { children: React.ReactChild }) {
 function AuthContainer({ children }: { children: React.ReactChild }) {
   const [user, isLoading] = useAuthState()
 
+  const handleLogin = React.useCallback(() => {
+    loginWithTwitter().catch(() => {
+      window.alert("Login failed")
+    })
+  }, [])
+
+  const handleLogoutLink = React.useCallback((event: React.SyntheticEvent) => {
+    event.preventDefault()
+    logout()
+  }, [])
+
   if (isLoading) {
     return <CircularProgress />
   }
 
   if (!user) {
-    return (
-      <Button onClick={() => loginWithTwitter()}>Login with Twitter</Button>
-    )
+    return <Button onClick={() => handleLogin()}>Login with Twitter</Button>
   }
 
   return (
     <React.Fragment>
-      <div>Hello {user.displayName}</div>
-      <Button onClick={() => logout()}>Logout</Button>
+      <div>
+        Hello {user.displayName}.{" "}
+        <Link href="#" onClick={handleLogoutLink}>
+          Logout
+        </Link>
+      </div>
       {children}
     </React.Fragment>
   )

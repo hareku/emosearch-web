@@ -18,20 +18,11 @@ export function getAuth() {
   return getApp().auth()
 }
 
-export async function loginWithTwitter() {
+export function loginWithTwitter() {
   const provider = new firebase.auth.TwitterAuthProvider()
-  try {
-    const user = await firebase.auth().signInWithPopup(provider)
-    console.log(user)
-  } catch (error) {
-    console.error("login failed", error)
-  }
+  return firebase.auth().signInWithPopup(provider)
 }
 
 export async function logout() {
-  try {
-    await firebase.auth().signOut()
-  } catch (error) {
-    console.error("logout failed", error)
-  }
+  return firebase.auth().signOut()
 }
