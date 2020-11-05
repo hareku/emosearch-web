@@ -83,12 +83,13 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
 
   return (
     <React.Fragment>
-      <div>
+      <Box mb={3}>
         Hello {user.displayName}.{" "}
         <Link href="#" onClick={handleLogoutLink}>
           Logout
         </Link>
-      </div>
+      </Box>
+
       {children}
     </React.Fragment>
   )
