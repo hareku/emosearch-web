@@ -23,7 +23,7 @@ export default function SearchList() {
   return (
     <React.Fragment>
       {data.map((search) => (
-        <Box mb={1}>
+        <Box key={search.SearchID} mb={1}>
           <SearchCard search={search} />
         </Box>
       ))}
