@@ -11,7 +11,26 @@ import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import Link from "@material-ui/core/Link"
-import { loginWithTwitter, logout } from "~/lib/firebase"
+import { loginWithTwitter, logout, getAuth } from "~/lib/firebase"
+import { Provider, IncomingOptions } from "use-http"
+
+const FetchOptions: IncomingOptions = {
+  interceptors: {
+    request: async ({ options }) => {
+      const auth = getAuth()
+      if (auth && auth.currentUser) {
+        try {
+          const token = await auth.currentUser.getIdToken(true)
+          options.headers["Authorization"] = `Bearer ${token}`
+        } catch (_) {
+          // do nothing
+        }
+      }
+
+      return options
+    },
+  },
+}
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props
@@ -37,9 +56,11 @@ export default function MyApp(props: AppProps) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
 
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <Provider url="http://127.0.0.1:9000/v1" options={FetchOptions}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </Provider>
       </ThemeProvider>
     </React.Fragment>
   )
