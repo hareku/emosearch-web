@@ -18,6 +18,7 @@
   "rules": {
     "@typescript-eslint/member-delimiter-style": ["error", { "multiline": { "delimiter": "none" } }],
     "@typescript-eslint/no-use-before-define": ["error", { "functions": false }],
+    "@typescript-eslint/ban-ts-comment": ["off"],
     "prettier/prettier": ["error", { "semi": false }]
   }
 }

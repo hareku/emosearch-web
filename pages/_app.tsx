@@ -4,7 +4,7 @@ import { AppProps } from "next/app"
 import { ThemeProvider } from "@material-ui/core/styles"
 import CssBaseline from "@material-ui/core/CssBaseline"
 import theme from "~/lib/theme"
-import { useAuthState } from "~/lib/auth"
+import { useAuthState, useLogin } from "~/lib/hooks/auth"
 import Container from "@material-ui/core/Container"
 import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
@@ -82,12 +82,7 @@ function Layout({ children }: { children: React.ReactChild }) {
 
 function AuthContainer({ children }: { children: React.ReactChild }) {
   const [user, isLoading] = useAuthState()
-
-  const handleLogin = React.useCallback(() => {
-    loginWithTwitter().catch(() => {
-      window.alert("Login failed")
-    })
-  }, [])
+  const { handleLogin } = useLogin()
 
   const handleLogoutLink = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault()
@@ -99,7 +94,7 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
   }
 
   if (!user) {
-    return <Button onClick={() => handleLogin()}>Login with Twitter</Button>
+    return <Button onClick={handleLogin}>Login with Twitter</Button>
   }
 
   return (
