@@ -4,12 +4,13 @@ import CardActions from "@material-ui/core/CardActions"
 import CardContent from "@material-ui/core/CardContent"
 import Button from "@material-ui/core/Button"
 import Box from "@material-ui/core/Box"
+import Link from "~/components/atoms/Link"
 import TextField from "@material-ui/core/TextField"
 import { useInput } from "~/lib/hooks/form"
 import useFetch from "use-http"
 
 function SearchCreateCard() {
-  const [keyword, _, handleKeywordChange] = useInput("")
+  const [keyword, setKeyword, handleKeywordChange] = useInput("")
   const { post, loading, error } = useFetch("/searches")
   const handleSubmit = React.useCallback<
     React.EventHandler<React.FormEvent<HTMLFormElement>>
@@ -19,6 +20,8 @@ function SearchCreateCard() {
       post({
         title: keyword,
         query: keyword,
+      }).then(() => {
+        setKeyword("")
       })
     },
     [post, keyword]
@@ -28,13 +31,18 @@ function SearchCreateCard() {
     <Card>
       <form onSubmit={handleSubmit}>
         <CardContent>
-          <div>Create search from here.</div>
+          <div>
+            You can build a query from{" "}
+            <Link href="https://twitter.com/search-advanced" target="_blank">
+              Twitter Search Advanced
+            </Link>
+          </div>
           <Box mt={3}>
             <TextField
               required
-              label="Keyword to search"
+              label="query"
               fullWidth
-              placeholder="e.g. Your name"
+              placeholder="e.g. MyName"
               value={keyword}
               onChange={handleKeywordChange}
             />
