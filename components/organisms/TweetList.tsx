@@ -1,6 +1,5 @@
 import React from "react"
-import Card from "@material-ui/core/Card"
-import CardContent from "@material-ui/core/CardContent"
+import { formatDistance } from "date-fns"
 import Box from "@material-ui/core/Box"
 import useFetch from "use-http"
 import Link from "~/components/atoms/Link"
@@ -25,30 +24,36 @@ export default function TweetList() {
   }
 
   return (
-    <React.Fragment>
+    <Box border={1} borderColor="grey.100">
       {data.map((tweet) => (
-        <Box key={tweet.TweetID} mb={1}>
+        <Box
+          key={tweet.TweetID}
+          border={1}
+          borderTop={0}
+          borderLeft={0}
+          borderRight={0}
+          borderColor="grey.100"
+        >
           <TweetCard tweet={tweet} />
         </Box>
       ))}
-    </React.Fragment>
+    </Box>
   )
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
   return (
-    <Card>
-      <CardContent>
-        <div>{tweet.Text}</div>
-        <div style={{ textAlign: "right", marginTop: 5 }}>
-          <Link
-            href={`http://twitter.com/intent/retweet?tweet_id=${tweet.TweetID}`}
-            target="_blank"
-          >
-            {tweet.TweetCreatedAt}
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+    <Box p={2}>
+      <div>{tweet.Text}</div>
+      <div style={{ textAlign: "right", marginTop: 5 }}>
+        <Link
+          href={`http://twitter.com/intent/retweet?tweet_id=${tweet.TweetID}`}
+          target="_blank"
+          title={tweet.TweetCreatedAt}
+        >
+          {formatDistance(Date.parse(tweet.TweetCreatedAt), new Date())}
+        </Link>
+      </div>
+    </Box>
   )
 }
