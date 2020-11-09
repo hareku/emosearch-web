@@ -1,5 +1,6 @@
 import React from "react"
+import TweetList from "~/components/organisms/TweetList"
 
-export default function SearchPage() {
-  return <div>tweets are here.</div>
+export default function TweetsPage() {
+  return <TweetList />
 }
