@@ -25,13 +25,14 @@ export function useLogin() {
     loginWithTwitter()
       .then((result) => {
         return register({
-          // @ts-ignore: firebase does not have credential type for twitter
-          twitter_access_token: result.credential.accessToken,
-          // @ts-ignore: firebase does not have credential type for twitter
-          twitter_access_token_secret: result.credential.secret,
+          // @ts-ignore: firebase does not have credential type for twitter provider
+          TwitterAccessToken: result.credential.accessToken,
+          // @ts-ignore: firebase does not have credential type for twitter provider
+          TwitterAccessTokenSecret: result.credential.secret,
         })
       })
       .catch(() => {
+        logout()
         window.alert("Login failed")
       })
   }, [register])

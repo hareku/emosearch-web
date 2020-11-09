@@ -18,8 +18,7 @@ function SearchCreateCard() {
     (event) => {
       event.preventDefault()
       post({
-        title: keyword,
-        query: keyword,
+        Query: keyword,
       }).then(() => {
         setKeyword("")
       })
