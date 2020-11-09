@@ -36,6 +36,7 @@ function SearchCreateCard() {
             <Link href="https://twitter.com/search-advanced" target="_blank">
               Twitter Search Advanced
             </Link>
+            .
           </div>
           <Box mt={3}>
             <TextField
