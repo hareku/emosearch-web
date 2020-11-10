@@ -35,17 +35,12 @@ export default function TweetList() {
   )
 
   const loadTweets = React.useCallback(() => {
-    console.log(
-      data.Tweets.length > 0
-        ? data.Tweets[data.Tweets.length - 1].TweetID
-        : null
-    )
     setSinceID(
       data.Tweets.length > 0
         ? data.Tweets[data.Tweets.length - 1].TweetID
         : null
     )
-  }, [data])
+  }, [data.Tweets])
 
   if (error) {
     return <div>{error.message}</div>
