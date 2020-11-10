@@ -1,10 +1,14 @@
 import React from "react"
-import Card from "@material-ui/core/Card"
-import CardContent from "@material-ui/core/CardContent"
-import Box from "@material-ui/core/Box"
 import Link from "~/components/atoms/Link"
 import useFetch from "use-http"
 import { Search } from "~/types/search"
+import {
+  Typography,
+  Card,
+  CardContent,
+  CardActionArea,
+  Box,
+} from "@material-ui/core"
 
 export default function SearchList() {
   const { get, loading, error, data = [] } = useFetch<Search[]>("/searches")
@@ -33,12 +37,19 @@ export default function SearchList() {
 
 function SearchCard({ search }: { search: Search }) {
   return (
-    <Link href={`/searches/${search.SearchID}`}>
-      <Card>
-        <CardContent>
-          <div>{search.Query}</div>
-        </CardContent>
-      </Card>
-    </Link>
+    <Card>
+      <CardActionArea>
+        <Link
+          href={`/searches/${search.SearchID}`}
+          style={{ textDecoration: "none" }}
+        >
+          <CardContent>
+            <Typography color="textPrimary" variant="h6">
+              {search.Query}
+            </Typography>
+          </CardContent>
+        </Link>
+      </CardActionArea>
+    </Card>
   )
 }
