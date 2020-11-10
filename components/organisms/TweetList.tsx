@@ -1,5 +1,5 @@
 import React from "react"
-import { formatDistance } from "date-fns"
+import { formatDistanceToNow } from "date-fns"
 import Box from "@material-ui/core/Box"
 import CircularProgress from "@material-ui/core/CircularProgress"
 import useFetch from "use-http"
@@ -104,7 +104,7 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           target="_blank"
           title={tweet.TweetCreatedAt}
         >
-          {formatDistance(Date.parse(tweet.TweetCreatedAt), new Date())}
+          {formatDistanceToNow(Date.parse(tweet.TweetCreatedAt))}
         </Link>
       </div>
     </Box>
