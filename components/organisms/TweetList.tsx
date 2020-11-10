@@ -124,7 +124,9 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           </Link>
         </Box>
         <Box mt={1}>
-          <Typography>{tweet.Text}</Typography>
+          <Typography
+            dangerouslySetInnerHTML={{ __html: tweet.Text }}
+          ></Typography>
         </Box>
       </Box>
     </Box>
