@@ -72,9 +72,16 @@ function Layout({ children }: { children: React.ReactChild }) {
     <Container maxWidth="sm">
       <Box my={4}>
         <Box textAlign="center">
-          <Typography variant="h4" component="h1" gutterBottom>
-            EmoSearch
-          </Typography>
+          <Link href="/" style={{ textDecoration: "none" }}>
+            <Typography
+              variant="h4"
+              component="h1"
+              gutterBottom
+              color="textPrimary"
+            >
+              EmoSearch
+            </Typography>
+          </Link>
         </Box>
 
         <AuthContainer>{children}</AuthContainer>
