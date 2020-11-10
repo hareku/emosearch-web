@@ -13,6 +13,7 @@ import CircularProgress from "@material-ui/core/CircularProgress"
 import Link from "@material-ui/core/Link"
 import { loginWithTwitter, logout, getAuth } from "~/lib/firebase"
 import { Provider, IncomingOptions } from "use-http"
+import { useRouter } from "next/router"
 
 const FetchOptions: IncomingOptions = {
   interceptors: {
@@ -83,10 +84,17 @@ function Layout({ children }: { children: React.ReactChild }) {
 function AuthContainer({ children }: { children: React.ReactChild }) {
   const [user, isLoading] = useAuthState()
   const { handleLogin } = useLogin()
+  const router = useRouter()
 
   const handleLogoutLink = React.useCallback((event: React.SyntheticEvent) => {
     event.preventDefault()
     logout()
+      .then(() => {
+        router.replace("/")
+      })
+      .catch(() => {
+        window.alert("Logout failed")
+      })
   }, [])
 
   if (isLoading) {
@@ -101,7 +109,7 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
     <React.Fragment>
       <Box mb={3}>
         Hello {user.displayName}.{" "}
-        <Link href="#" onClick={handleLogoutLink}>
+        <Link href="/logout" onClick={handleLogoutLink}>
           Logout
         </Link>
       </Box>
