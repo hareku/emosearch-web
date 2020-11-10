@@ -1,6 +1,7 @@
 import React from "react"
 import { formatDistance } from "date-fns"
 import Box from "@material-ui/core/Box"
+import CircularProgress from "@material-ui/core/CircularProgress"
 import useFetch from "use-http"
 import Link from "~/components/atoms/Link"
 import { Tweet } from "~/types/tweet"
@@ -17,7 +18,7 @@ export default function TweetList() {
 
   const [untilID, setSinceID] = React.useState<number | null>(null)
   const { data = { HasMore: true, Tweets: [] }, error } = useFetch<TweetsRes>(
-    `/searches/${router.query.sid}/tweets?limit=50${
+    `/searches/${router.query.sid}/tweets?limit=100${
       untilID ? `&until_id=${untilID}` : ""
     }`,
     {
@@ -52,23 +53,42 @@ export default function TweetList() {
       loadMore={loadTweets}
       hasMore={data.HasMore}
       initialLoad
-      loader={<div key={0}>Loading ...</div>}
+      loader={<Loader key={0} />}
+      threshold={1000}
     >
-      <Box border={1} borderColor="grey.100">
-        {data.Tweets.map((tweet) => (
-          <Box
-            key={tweet.TweetID}
-            border={1}
-            borderTop={0}
-            borderLeft={0}
-            borderRight={0}
-            borderColor="grey.100"
-          >
-            <TweetCard tweet={tweet} />
-          </Box>
-        ))}
-      </Box>
+      <TweetListBody data={data} />
     </InfiniteScroll>
+  )
+}
+
+function TweetListBody({ data }: { data: TweetsRes }) {
+  if (data.Tweets.length === 0) {
+    return data.HasMore ? null : <div>No Tweets.</div>
+  }
+
+  return (
+    <Box border={1} borderColor="grey.100">
+      {data.Tweets.map((tweet) => (
+        <Box
+          key={tweet.TweetID}
+          border={1}
+          borderTop={0}
+          borderLeft={0}
+          borderRight={0}
+          borderColor="grey.100"
+        >
+          <TweetCard tweet={tweet} />
+        </Box>
+      ))}
+    </Box>
+  )
+}
+
+function Loader() {
+  return (
+    <Box textAlign="center" mt={3}>
+      <CircularProgress />
+    </Box>
   )
 }
 

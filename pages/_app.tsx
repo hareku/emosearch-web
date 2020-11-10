@@ -71,9 +71,11 @@ function Layout({ children }: { children: React.ReactChild }) {
   return (
     <Container maxWidth="sm">
       <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          EmoSearch
-        </Typography>
+        <Box textAlign="center">
+          <Typography variant="h4" component="h1" gutterBottom>
+            EmoSearch
+          </Typography>
+        </Box>
 
         <AuthContainer>{children}</AuthContainer>
       </Box>
@@ -98,7 +100,11 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
   }, [])
 
   if (isLoading) {
-    return <CircularProgress />
+    return (
+      <Box p={1} textAlign="center">
+        <CircularProgress />
+      </Box>
+    )
   }
 
   if (!user) {
@@ -107,7 +113,7 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
 
   return (
     <React.Fragment>
-      <Box mb={3}>
+      <Box mb={3} textAlign="center">
         Hello {user.displayName}.{" "}
         <Link href="/logout" onClick={handleLogoutLink}>
           Logout
