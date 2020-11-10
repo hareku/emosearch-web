@@ -1,6 +1,6 @@
 import React from "react"
 import Link from "~/components/atoms/Link"
-import useFetch from "use-http"
+import useFetch, { CachePolicies } from "use-http"
 import { Search } from "~/types/search"
 import {
   Typography,
@@ -8,29 +8,41 @@ import {
   CardContent,
   CardActionArea,
   Box,
+  CircularProgress,
 } from "@material-ui/core"
+import SearchCreateCard from "~/components/organisms/SearchCreateCard"
 
 export default function SearchList() {
-  const { get, loading, error, data = [] } = useFetch<Search[]>("/searches")
-  React.useEffect(() => {
-    get().catch()
-  }, [])
+  const { get: reload, loading, error, data: searches = [] } = useFetch<
+    Search[]
+  >("/searches", { cachePolicy: CachePolicies.NO_CACHE }, [])
+  const handleCreate = React.useCallback(() => {
+    reload()
+  }, [reload])
 
   if (loading) {
-    return <div>loading searches</div>
+    return (
+      <Box textAlign="center">
+        <CircularProgress />
+      </Box>
+    )
   }
 
   if (error) {
-    return <div>{error.message}</div>
+    return <Typography color="error">{error.message}</Typography>
   }
 
   return (
     <React.Fragment>
-      {data.map((search) => (
+      {searches.map((search) => (
         <Box key={search.SearchID} mb={1}>
           <SearchCard search={search} />
         </Box>
       ))}
+
+      <Box mt={3}>
+        <SearchCreateCard onCreate={handleCreate} />
+      </Box>
     </React.Fragment>
   )
 }
