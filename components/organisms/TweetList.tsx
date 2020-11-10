@@ -1,7 +1,6 @@
 import React from "react"
 import { formatDistanceToNow } from "date-fns"
-import Box from "@material-ui/core/Box"
-import CircularProgress from "@material-ui/core/CircularProgress"
+import { Box, Avatar, CircularProgress, Typography } from "@material-ui/core"
 import useFetch from "use-http"
 import Link from "~/components/atoms/Link"
 import { Tweet } from "~/types/tweet"
@@ -94,19 +93,40 @@ function Loader() {
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
   return (
-    <Box p={2}>
-      <div>
-        ({tweet.Text.length}) {tweet.Text}
-      </div>
-      <div style={{ textAlign: "right", marginTop: 5 }}>
-        <Link
-          href={`http://twitter.com/intent/retweet?tweet_id=${tweet.TweetID}`}
-          target="_blank"
-          title={tweet.TweetCreatedAt}
-        >
-          {formatDistanceToNow(Date.parse(tweet.TweetCreatedAt))}
-        </Link>
-      </div>
+    <Box pt={1} pb={3} px={2} display="flex">
+      <Box mr={2}>
+        <Avatar alt={tweet.User.Name} src={tweet.User.ProfileImageURL} />
+      </Box>
+      <Box>
+        <Box>
+          <Link
+            href={`http://twitter.com/${tweet.User.ScreenName}`}
+            target="_blank"
+            title={tweet.User.Name}
+            style={{ marginRight: 5 }}
+          >
+            <Typography
+              color="textSecondary"
+              variant="caption"
+              component="span"
+            >
+              {tweet.User.Name}
+            </Typography>
+          </Link>
+          <Link
+            href={`http://twitter.com/${tweet.User.ScreenName}/status/${tweet.TweetID}`}
+            target="_blank"
+            title={tweet.TweetCreatedAt}
+          >
+            <Typography color="textSecondary" variant="caption">
+              ({formatDistanceToNow(Date.parse(tweet.TweetCreatedAt))})
+            </Typography>
+          </Link>
+        </Box>
+        <Box mt={1}>
+          <Typography>{tweet.Text}</Typography>
+        </Box>
+      </Box>
     </Box>
   )
 }
