@@ -13,7 +13,8 @@
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "plugin:jest/recommended"
+    "plugin:jest/recommended",
+    "plugin:react-hooks/recommended"
   ],
   "rules": {
     "@typescript-eslint/member-delimiter-style": ["error", { "multiline": { "delimiter": "none" } }],
