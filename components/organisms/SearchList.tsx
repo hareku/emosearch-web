@@ -7,8 +7,10 @@ import {
   Card,
   CardContent,
   CardActionArea,
+  CardActions,
   Box,
   CircularProgress,
+  Button,
 } from "@material-ui/core"
 import SearchCreateCard from "~/components/organisms/SearchCreateCard"
 
@@ -16,7 +18,7 @@ export default function SearchList() {
   const { get: reload, loading, error, data: searches = [] } = useFetch<
     Search[]
   >("/searches", { cachePolicy: CachePolicies.NO_CACHE }, [])
-  const handleCreate = React.useCallback(() => {
+  const handleReload = React.useCallback(() => {
     reload()
   }, [reload])
 
@@ -36,18 +38,36 @@ export default function SearchList() {
     <React.Fragment>
       {searches.map((search) => (
         <Box key={search.SearchID} mb={1}>
-          <SearchCard search={search} />
+          <SearchCard search={search} onDelete={handleReload} />
         </Box>
       ))}
 
       <Box mt={3}>
-        <SearchCreateCard onCreate={handleCreate} />
+        <SearchCreateCard onCreate={handleReload} />
       </Box>
     </React.Fragment>
   )
 }
 
-function SearchCard({ search }: { search: Search }) {
+function SearchCard({
+  search,
+  onDelete,
+}: {
+  search: Search
+  onDelete: () => void
+}) {
+  const { del } = useFetch(`/searches/${search.SearchID}`)
+  const handleDelete = React.useCallback(() => {
+    if (!window.confirm("delete?")) return
+    del()
+      .then(() => {
+        onDelete()
+      })
+      .catch(() => {
+        window.alert("failed to delete")
+      })
+  }, [onDelete])
+
   return (
     <Card>
       <CardActionArea>
@@ -62,6 +82,11 @@ function SearchCard({ search }: { search: Search }) {
           </CardContent>
         </Link>
       </CardActionArea>
+      <CardActions style={{ justifyContent: "flex-end" }}>
+        <Button onClick={handleDelete} size="small">
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   )
 }
