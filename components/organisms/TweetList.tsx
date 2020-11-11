@@ -145,16 +145,18 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
               ({formatDistanceToNow(Date.parse(tweet.TweetCreatedAt))})
             </Typography>
           </Link>
-          <SvgIcon
-            color={isPositive ? "primary" : "secondary"}
-            style={{ marginLeft: "auto" }}
-          >
-            {isPositive ? (
-              <SentimentVerySatisfied />
-            ) : (
-              <SentimentDissatisfied />
-            )}
-          </SvgIcon>
+          {tweet.SentimentScore ? (
+            <SvgIcon
+              color={isPositive ? "primary" : "secondary"}
+              style={{ marginLeft: "auto" }}
+            >
+              {isPositive ? (
+                <SentimentVerySatisfied />
+              ) : (
+                <SentimentDissatisfied />
+              )}
+            </SvgIcon>
+          ) : null}
         </Box>
         <Box mt={1}>
           <Typography
