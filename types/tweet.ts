@@ -41,7 +41,9 @@ interface Medium {
   Start: number
   End: number
   URL: string
-  ExpandedURL: string
+  Type: string
+  MediaURL: string
+  VideoURL: string
 }
 
 export interface Tweet {

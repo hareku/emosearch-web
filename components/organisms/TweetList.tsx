@@ -168,6 +168,19 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
             dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
+
+          {tweet.Entities.Media.map((medium, ind) => (
+            <Box mt={1} key={ind}>
+              {medium.VideoURL ? (
+                <video src={medium.VideoURL} />
+              ) : (
+                <img
+                  src={medium.MediaURL}
+                  style={{ maxWidth: "100%", height: "auto" }}
+                />
+              )}
+            </Box>
+          ))}
         </Box>
       </Box>
     </Box>
