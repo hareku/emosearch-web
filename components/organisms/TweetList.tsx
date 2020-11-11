@@ -17,6 +17,7 @@ import {
   SentimentDissatisfied,
   SentimentVerySatisfied,
 } from "@material-ui/icons"
+import { linkTweet } from "~/lib/link-tweet"
 
 interface TweetsRes {
   HasMore: boolean
@@ -105,6 +106,10 @@ function Loader() {
 function TweetCard({ tweet }: { tweet: Tweet }) {
   const rand = React.useMemo(() => Math.round(Math.random() * 10) / 10, [])
   const isPositive = React.useMemo(() => rand <= 0.7, [rand])
+  const linkedTweet = React.useMemo(
+    () => linkTweet(tweet.Text, tweet.Entities),
+    [tweet]
+  )
 
   return (
     <Box pt={1} pb={3} px={2} display="flex">
@@ -160,7 +165,8 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
         </Box>
         <Box mt={1}>
           <Typography
-            dangerouslySetInnerHTML={{ __html: tweet.Text }}
+            style={{ wordWrap: "break-word", whiteSpace: "pre-wrap" }}
+            dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
         </Box>
       </Box>
