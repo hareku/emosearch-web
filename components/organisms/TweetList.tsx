@@ -1,11 +1,22 @@
 import React from "react"
 import { formatDistanceToNow } from "date-fns"
-import { Box, Avatar, CircularProgress, Typography } from "@material-ui/core"
+import {
+  Box,
+  Avatar,
+  CircularProgress,
+  Typography,
+  SvgIcon,
+  colors,
+} from "@material-ui/core"
 import useFetch from "use-http"
 import Link from "~/components/atoms/Link"
 import { Tweet } from "~/types/tweet"
 import { useRouter } from "next/router"
 import InfiniteScroll from "react-infinite-scroller"
+import {
+  SentimentDissatisfied,
+  SentimentVerySatisfied,
+} from "@material-ui/icons"
 
 interface TweetsRes {
   HasMore: boolean
@@ -92,13 +103,25 @@ function Loader() {
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
+  const rand = React.useMemo(() => Math.round(Math.random() * 10) / 10, [])
+  const isPositive = React.useMemo(() => rand <= 0.7, [rand])
+
   return (
     <Box pt={1} pb={3} px={2} display="flex">
       <Box mr={2}>
-        <Avatar alt={tweet.User.Name} src={tweet.User.ProfileImageURL} />
+        <Avatar
+          variant="rounded"
+          alt={tweet.User.Name}
+          src={tweet.User.ProfileImageURL}
+          style={{
+            width: 48,
+            height: 48,
+            border: `1px solid ${colors.grey[100]}`,
+          }}
+        />
       </Box>
-      <Box>
-        <Box>
+      <Box flexGrow={1}>
+        <Box display="flex" alignItems="center">
           <Link
             href={`http://twitter.com/${tweet.User.ScreenName}`}
             target="_blank"
@@ -122,6 +145,16 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
               ({formatDistanceToNow(Date.parse(tweet.TweetCreatedAt))})
             </Typography>
           </Link>
+          <SvgIcon
+            color={isPositive ? "primary" : "secondary"}
+            style={{ marginLeft: "auto" }}
+          >
+            {isPositive ? (
+              <SentimentVerySatisfied />
+            ) : (
+              <SentimentDissatisfied />
+            )}
+          </SvgIcon>
         </Box>
         <Box mt={1}>
           <Typography
