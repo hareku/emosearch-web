@@ -29,7 +29,7 @@ export default function TweetList() {
 
   const [untilID, setSinceID] = React.useState<number | null>(null)
   const { data = { HasMore: true, Tweets: [] }, error } = useFetch<TweetsRes>(
-    `/searches/${router.query.sid}/tweets?limit=100${
+    `/searches/${router.query.sid}/tweets?limit=50${
       untilID ? `&until_id=${untilID}` : ""
     }`,
     {
@@ -65,7 +65,7 @@ export default function TweetList() {
       hasMore={data.HasMore}
       initialLoad
       loader={<Loader key={0} />}
-      threshold={1000}
+      threshold={1600}
     >
       <TweetListBody data={data} />
     </InfiniteScroll>
@@ -172,7 +172,12 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           {tweet.Entities.Media.map((medium, ind) => (
             <Box mt={1} key={ind}>
               {medium.VideoURL ? (
-                <video src={medium.VideoURL} />
+                <video
+                  src={medium.VideoURL}
+                  autoPlay={false}
+                  style={{ maxWidth: "100%", height: "auto" }}
+                  controls
+                />
               ) : (
                 <img
                   src={medium.MediaURL}
