@@ -10,9 +10,9 @@ import Typography from "@material-ui/core/Typography"
 import Box from "@material-ui/core/Box"
 import Button from "@material-ui/core/Button"
 import CircularProgress from "@material-ui/core/CircularProgress"
-import Link from "@material-ui/core/Link"
-import { loginWithTwitter, logout, getAuth } from "~/lib/firebase"
-import { Provider, IncomingOptions } from "use-http"
+import Link from "~/components/atoms/Link"
+import { logout, getAuth } from "~/lib/firebase"
+import { Provider as UseHttpProvider, IncomingOptions } from "use-http"
 import { useRouter } from "next/router"
 
 const FetchOptions: IncomingOptions = {
@@ -57,11 +57,11 @@ export default function MyApp(props: AppProps) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
 
-        <Provider url="http://127.0.0.1:9000/v1" options={FetchOptions}>
+        <UseHttpProvider url="http://127.0.0.1:9000/v1" options={FetchOptions}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </Provider>
+        </UseHttpProvider>
       </ThemeProvider>
     </React.Fragment>
   )
