@@ -166,9 +166,9 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           ) : null}
           {tweet.Entities?.Media.map((medium, ind) => (
             <Box mt={1} key={ind}>
-              {medium.VideoURL ? (
+              {medium.VideoInfo && medium.VideoInfo.Variants.length > 0 ? (
                 <video
-                  src={medium.VideoURL}
+                  src={medium.VideoInfo.Variants[0].URL}
                   autoPlay={false}
                   style={{ maxWidth: "100%", height: "auto" }}
                   controls

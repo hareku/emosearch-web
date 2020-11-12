@@ -43,7 +43,19 @@ interface Medium {
   URL: string
   Type: string
   MediaURL: string
-  VideoURL: string
+  VideoInfo: VideoInfo | null
+}
+
+interface VideoInfo {
+  AspectRatio: [number, number]
+  DurationMillis: number
+  Variants: VideoVariant[]
+}
+
+interface VideoVariant {
+  ContentType: string
+  Bitrate: number
+  URL: string
 }
 
 export interface Tweet {
