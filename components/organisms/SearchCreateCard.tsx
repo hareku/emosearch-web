@@ -24,7 +24,7 @@ function SearchCreateCard({ onCreate }: { onCreate: () => void }) {
         onCreate()
       })
     },
-    [post, keyword, onCreate]
+    [post, keyword, setKeyword, onCreate]
   )
 
   return (

@@ -66,7 +66,7 @@ function SearchCard({
       .catch(() => {
         window.alert("failed to delete")
       })
-  }, [onDelete])
+  }, [del, onDelete])
 
   return (
     <Card>

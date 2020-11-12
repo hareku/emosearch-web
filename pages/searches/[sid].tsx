@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useCallback, useState } from "react"
 import TweetList from "~/components/organisms/TweetList"
 import {
   Select,
@@ -12,24 +12,25 @@ import { LABELS, queryToLabel, labelToQuery } from "~/lib/sentiment"
 
 export default function TweetsPage() {
   const router = useRouter()
-  const [label, setLabel] = React.useState(
-    queryToLabel(router.query.sentiment_label)
-  )
+  const [label, setLabel] = useState(queryToLabel(router.query.sentiment_label))
 
-  const handleSelectChange = React.useCallback<
+  const handleSelectChange = useCallback<
     React.EventHandler<
       React.ChangeEvent<{ name?: string | undefined; value: unknown }>
     >
-  >((event) => {
-    if (typeof event.target.value !== "string") return
-    setLabel(event.target.value)
-    const newLabel = labelToQuery(event.target.value)
-    if (newLabel) {
-      router.push(`/searches/${router.query.sid}?sentiment_label=${newLabel}`)
-    } else {
-      router.push(`/searches/${router.query.sid}`)
-    }
-  }, [])
+  >(
+    (event) => {
+      if (typeof event.target.value !== "string") return
+      setLabel(event.target.value)
+      const newLabel = labelToQuery(event.target.value)
+      if (newLabel) {
+        router.push(`/searches/${router.query.sid}?sentiment_label=${newLabel}`)
+      } else {
+        router.push(`/searches/${router.query.sid}`)
+      }
+    },
+    [router]
+  )
 
   return (
     <React.Fragment>

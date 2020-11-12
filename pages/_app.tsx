@@ -95,16 +95,19 @@ function AuthContainer({ children }: { children: React.ReactChild }) {
   const { handleLogin } = useLogin()
   const router = useRouter()
 
-  const handleLogoutLink = React.useCallback((event: React.SyntheticEvent) => {
-    event.preventDefault()
-    logout()
-      .then(() => {
-        router.replace("/")
-      })
-      .catch(() => {
-        window.alert("Logout failed")
-      })
-  }, [])
+  const handleLogoutLink = React.useCallback(
+    (event: React.SyntheticEvent) => {
+      event.preventDefault()
+      logout()
+        .then(() => {
+          router.replace("/")
+        })
+        .catch(() => {
+          window.alert("Logout failed")
+        })
+    },
+    [router]
+  )
 
   if (isLoading) {
     return (
