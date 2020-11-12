@@ -126,8 +126,8 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
                 <SvgIcon color="primary">
                   <SentimentVerySatisfied />
                 </SvgIcon>
-              ) : tweet.SentimentLabel === "POSITIVE" ? (
-                <SvgIcon color="secondary">
+              ) : tweet.SentimentLabel === "NEGATIVE" ? (
+                <SvgIcon color="error">
                   <SentimentDissatisfied />
                 </SvgIcon>
               ) : (
