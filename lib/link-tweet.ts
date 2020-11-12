@@ -27,6 +27,7 @@ export function linkTweet(
 
   urls.forEach((url) => {
     const urlBeginIndex = rawText.indexOf(url.text, beginIndex)
+    if (urlBeginIndex === -1) return
     result += escape(rawText.substring(beginIndex, urlBeginIndex))
     if (!url.delete) {
       result += `<a${linkClass ? `class="${linkClass}"` : ""} href="${
