@@ -25,12 +25,16 @@ interface TweetsRes {
 }
 
 export default function TweetList() {
-  const router = useRouter()
+  const { query } = useRouter()
 
   const [untilID, setSinceID] = React.useState<number | null>(null)
   const { data = { HasMore: true, Tweets: [] }, error } = useFetch<TweetsRes>(
-    `/searches/${router.query.sid}/tweets?limit=50${
+    `/searches/${query.sid}/tweets?limit=50${
       untilID ? `&until_id=${untilID}` : ""
+    }${
+      query.sentiment_label != null
+        ? `&sentiment_label=${query.sentiment_label}`
+        : ""
     }`,
     {
       onNewData: (oldData: TweetsRes, newData: TweetsRes): TweetsRes => {
@@ -43,7 +47,7 @@ export default function TweetList() {
         }
       },
     },
-    [untilID]
+    [untilID, query]
   )
 
   const loadTweets = React.useCallback(() => {
@@ -104,8 +108,10 @@ function Loader() {
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
-  const rand = React.useMemo(() => Math.round(Math.random() * 10) / 10, [])
-  const isPositive = React.useMemo(() => rand <= 0.7, [rand])
+  const isPositive = React.useMemo(
+    () => tweet.SentimentScore && tweet.SentimentScore.Positive >= 0.5,
+    [tweet]
+  )
   const linkedTweet = React.useMemo(
     () => linkTweet(tweet.Text, tweet.Entities),
     [tweet]
@@ -125,7 +131,7 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           }}
         />
       </Box>
-      <Box flexGrow={1}>
+      <Box flexGrow={1} minWidth={0}>
         <Box display="flex" alignItems="center">
           <Link
             href={`http://twitter.com/${tweet.User.ScreenName}`}
@@ -169,7 +175,27 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
 
-          {tweet.Entities.Media.map((medium, ind) => (
+          {tweet.SentimentScore ? (
+            <Typography
+              style={{
+                wordWrap: "break-word",
+                whiteSpace: "pre-wrap",
+                marginTop: 4,
+              }}
+              color="textSecondary"
+            >
+              Positive:{" "}
+              {Math.round(tweet.SentimentScore.Positive * 1000) / 1000}
+              <br />
+              Negative:{" "}
+              {Math.round(tweet.SentimentScore.Negative * 1000) / 1000}
+              <br />
+              Mixed: {Math.round(tweet.SentimentScore.Mixed * 1000) / 1000}
+              <br />
+              Neutral: {Math.round(tweet.SentimentScore.Neutral * 1000) / 1000}
+            </Typography>
+          ) : null}
+          {tweet.Entities?.Media.map((medium, ind) => (
             <Box mt={1} key={ind}>
               {medium.VideoURL ? (
                 <video
