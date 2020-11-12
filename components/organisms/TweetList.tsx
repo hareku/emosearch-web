@@ -8,10 +8,8 @@ import {
   SvgIcon,
   colors,
 } from "@material-ui/core"
-import useFetch from "use-http"
 import Link from "~/components/atoms/Link"
 import { Tweet } from "~/types/tweet"
-import { useRouter } from "next/router"
 import InfiniteScroll from "react-infinite-scroller"
 import {
   SentimentDissatisfied,
@@ -19,55 +17,24 @@ import {
 } from "@material-ui/icons"
 import { linkTweet } from "~/lib/link-tweet"
 
-interface TweetsRes {
+interface Data {
   HasMore: boolean
   Tweets: Tweet[]
 }
 
-export default function TweetList() {
-  const { query } = useRouter()
-
-  const [untilID, setSinceID] = React.useState<number | null>(null)
-  const { data = { HasMore: true, Tweets: [] }, error } = useFetch<TweetsRes>(
-    `/searches/${query.sid}/tweets?limit=50${
-      untilID ? `&until_id=${untilID}` : ""
-    }${
-      query.sentiment_label != null
-        ? `&sentiment_label=${query.sentiment_label}`
-        : ""
-    }`,
-    {
-      onNewData: (oldData: TweetsRes, newData: TweetsRes): TweetsRes => {
-        return {
-          HasMore: newData.HasMore,
-          Tweets: [
-            ...(oldData ? oldData.Tweets : []),
-            ...(newData ? newData.Tweets : []),
-          ],
-        }
-      },
-    },
-    [untilID, query]
-  )
-
-  const loadTweets = React.useCallback(() => {
-    setSinceID(
-      data.Tweets.length > 0
-        ? data.Tweets[data.Tweets.length - 1].TweetID
-        : null
-    )
-  }, [data.Tweets])
-
-  if (error) {
-    return <div>{error.message}</div>
-  }
-
+export default function TweetList({
+  data,
+  loading,
+  onLoadTweets,
+}: {
+  data: Data
+  loading: boolean
+  onLoadTweets: () => void
+}) {
   return (
     <InfiniteScroll
-      pageStart={0}
-      loadMore={loadTweets}
-      hasMore={data.HasMore}
-      initialLoad
+      loadMore={onLoadTweets}
+      hasMore={!loading && data.HasMore}
       loader={<Loader key={0} />}
       threshold={1600}
     >
@@ -76,7 +43,7 @@ export default function TweetList() {
   )
 }
 
-function TweetListBody({ data }: { data: TweetsRes }) {
+function TweetListBody({ data }: { data: Data }) {
   if (data.Tweets.length === 0) {
     return data.HasMore ? null : <div>No Tweets.</div>
   }

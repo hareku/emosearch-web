@@ -6,31 +6,78 @@ import {
   Box,
   FormControl,
   InputLabel,
+  CircularProgress,
 } from "@material-ui/core"
+import { stringifyUrl, StringifiableRecord } from "query-string"
 import { useRouter } from "next/router"
-import { LABELS, queryToLabel, labelToQuery } from "~/lib/sentiment"
+import { Tweet } from "~/types/tweet"
+import useFetch from "use-http"
+const LABELS = Object.freeze(["ALL", "POSITIVE", "NEGATIVE"])
+interface TweetsData {
+  HasMore: boolean
+  Tweets: Tweet[]
+}
 
-export default function TweetsPage() {
+export default function SearchPage() {
   const router = useRouter()
-  const [label, setLabel] = useState(queryToLabel(router.query.sentiment_label))
+  const searchID = router.query.sid as string
+  const [label, setLabel] = useState<string>("ALL")
 
-  const handleSelectChange = useCallback<
+  const { get, loading } = useFetch("", { cache: "no-cache" })
+  const [tweetsData, setTweetsData] = useState<TweetsData>({
+    HasMore: true,
+    Tweets: [],
+  })
+  const loadTweets = useCallback<
+    (arg: { reset: boolean; sentimentLabel: string }) => void
+  >(
+    ({ reset, sentimentLabel }) => {
+      const params: StringifiableRecord = {
+        limit: 50,
+        until_id: undefined,
+        sentiment_label: sentimentLabel === "ALL" ? undefined : sentimentLabel,
+      }
+      const tweets = tweetsData.Tweets
+      if (!reset && tweets.length > 0) {
+        params.until_id = tweets[tweets.length - 1].TweetID
+      }
+      const url = stringifyUrl({
+        url: `/searches/${searchID}/tweets`,
+        query: params,
+      })
+
+      get(url)
+        .then((data: TweetsData) => {
+          setTweetsData({
+            HasMore: data.HasMore,
+            Tweets: reset
+              ? data.Tweets
+              : [...tweetsData.Tweets, ...data.Tweets],
+          })
+        })
+        .catch()
+    },
+    [get, searchID, tweetsData.Tweets]
+  )
+
+  const handleLabelChange = useCallback<
     React.EventHandler<
       React.ChangeEvent<{ name?: string | undefined; value: unknown }>
     >
   >(
     (event) => {
-      if (typeof event.target.value !== "string") return
-      setLabel(event.target.value)
-      const newLabel = labelToQuery(event.target.value)
-      if (newLabel) {
-        router.push(`/searches/${router.query.sid}?sentiment_label=${newLabel}`)
-      } else {
-        router.push(`/searches/${router.query.sid}`)
+      if (typeof event.target.value !== "string") {
+        throw new Error("label value should be string")
       }
+      setLabel(event.target.value)
+      loadTweets({ sentimentLabel: event.target.value, reset: true })
     },
-    [router]
+    [loadTweets]
   )
+
+  const handleLoadTweets = useCallback(() => {
+    loadTweets({ reset: false, sentimentLabel: label })
+  }, [label, loadTweets])
 
   return (
     <React.Fragment>
@@ -40,18 +87,28 @@ export default function TweetsPage() {
           <Select
             id="sentiment_label"
             value={label}
-            onChange={handleSelectChange}
+            onChange={handleLabelChange}
           >
             {LABELS.map((label) => (
-              <MenuItem key={label.Value} value={label.Value}>
-                {label.Value}
+              <MenuItem key={label} value={label}>
+                {label}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
       </Box>
 
-      <TweetList key={label} />
+      {loading ? (
+        <Box textAlign="center" mb={2}>
+          <CircularProgress />
+        </Box>
+      ) : null}
+
+      <TweetList
+        data={tweetsData}
+        onLoadTweets={handleLoadTweets}
+        loading={loading}
+      />
     </React.Fragment>
   )
 }
