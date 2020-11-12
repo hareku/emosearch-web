@@ -13,6 +13,7 @@ import { Tweet } from "~/types/tweet"
 import InfiniteScroll from "react-infinite-scroller"
 import {
   SentimentDissatisfied,
+  SentimentSatisfied,
   SentimentVerySatisfied,
 } from "@material-ui/icons"
 import { linkTweet } from "~/lib/link-tweet"
@@ -75,10 +76,6 @@ function Loader() {
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
-  const isPositive = React.useMemo(
-    () => tweet.SentimentScore && tweet.SentimentScore.Positive >= 0.5,
-    [tweet]
-  )
   const linkedTweet = React.useMemo(
     () => linkTweet(tweet.Text, tweet.Entities),
     [tweet]
@@ -124,16 +121,21 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             </Typography>
           </Link>
           {tweet.SentimentScore ? (
-            <SvgIcon
-              color={isPositive ? "primary" : "secondary"}
-              style={{ marginLeft: "auto" }}
-            >
-              {isPositive ? (
-                <SentimentVerySatisfied />
+            <div style={{ marginLeft: "auto" }}>
+              {tweet.SentimentLabel === "POSITIVE" ? (
+                <SvgIcon color="primary">
+                  <SentimentVerySatisfied />
+                </SvgIcon>
+              ) : tweet.SentimentLabel === "POSITIVE" ? (
+                <SvgIcon color="secondary">
+                  <SentimentDissatisfied />
+                </SvgIcon>
               ) : (
-                <SentimentDissatisfied />
+                <SvgIcon color="disabled">
+                  <SentimentSatisfied />
+                </SvgIcon>
               )}
-            </SvgIcon>
+            </div>
           ) : null}
         </Box>
         <Box mt={1}>

@@ -53,6 +53,7 @@ export interface Tweet {
   Text: string
   TweetCreatedAt: string
   SentimentScore: SentimentScore | null
+  SentimentLabel: string
   Entities: Entities | null
   User: {
     ID: string
