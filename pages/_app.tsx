@@ -22,7 +22,10 @@ const FetchOptions: IncomingOptions = {
       if (auth && auth.currentUser) {
         try {
           const token = await auth.currentUser.getIdToken(true)
-          options.headers["Authorization"] = `Bearer ${token}`
+          if (!(options.headers instanceof Headers)) {
+            options.headers = new Headers()
+            options.headers.set("Authorization", `Bearer ${token}`)
+          }
         } catch (_) {
           // do nothing
         }
