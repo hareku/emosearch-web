@@ -57,7 +57,10 @@ export default function MyApp(props: AppProps) {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
 
-        <UseHttpProvider url="http://127.0.0.1:9000/v1" options={FetchOptions}>
+        <UseHttpProvider
+          url={process.env.NEXT_PUBLIC_API_ENDPOINT}
+          options={FetchOptions}
+        >
           <Layout>
             <Component {...pageProps} />
           </Layout>
