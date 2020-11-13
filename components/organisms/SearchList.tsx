@@ -61,6 +61,11 @@ function SearchCard({ search }: { search: Search }) {
             <Typography color="textPrimary" variant="h6">
               {search.Query}
             </Typography>
+            <Typography color="textSecondary">
+              {search.LastSearchUpdatedAt
+                ? `Updated: ${search.LastSearchUpdatedAt}`
+                : "Please wait a minute for the update."}
+            </Typography>
           </CardContent>
         </Link>
       </CardActionArea>
