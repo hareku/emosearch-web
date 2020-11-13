@@ -38,7 +38,7 @@ export default function SearchList() {
     <React.Fragment>
       {searches.map((search) => (
         <Box key={search.SearchID} mb={1}>
-          <SearchCard search={search} onDelete={handleReload} />
+          <SearchCard search={search} />
         </Box>
       ))}
 
@@ -49,25 +49,7 @@ export default function SearchList() {
   )
 }
 
-function SearchCard({
-  search,
-  onDelete,
-}: {
-  search: Search
-  onDelete: () => void
-}) {
-  const { del } = useFetch(`/searches/${search.SearchID}`)
-  const handleDelete = React.useCallback(() => {
-    if (!window.confirm("delete?")) return
-    del()
-      .then(() => {
-        onDelete()
-      })
-      .catch(() => {
-        window.alert("failed to delete")
-      })
-  }, [del, onDelete])
-
+function SearchCard({ search }: { search: Search }) {
   return (
     <Card>
       <CardActionArea>
@@ -82,11 +64,6 @@ function SearchCard({
           </CardContent>
         </Link>
       </CardActionArea>
-      <CardActions style={{ justifyContent: "flex-end" }}>
-        <Button onClick={handleDelete} size="small">
-          Delete
-        </Button>
-      </CardActions>
     </Card>
   )
 }
