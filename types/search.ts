@@ -3,4 +3,6 @@ export interface Search {
   UserID: string
   Title: string
   Query: string
+  LastSearchUpdatedAt: string | null
+  NextSearchUpdateAt: string
 }

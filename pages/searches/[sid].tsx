@@ -7,6 +7,7 @@ import {
   FormControl,
   InputLabel,
   CircularProgress,
+  Button,
 } from "@material-ui/core"
 import { stringifyUrl, StringifiableRecord } from "query-string"
 import { useRouter } from "next/router"
@@ -79,23 +80,48 @@ export default function SearchPage() {
     loadTweets({ reset: false, sentimentLabel: label })
   }, [label, loadTweets])
 
+  const { del: deleteRequest } = useFetch(`/searches/${searchID}`)
+  const handleDelete = React.useCallback(() => {
+    if (!window.confirm("delete?")) return
+    deleteRequest()
+      .then(() => {
+        router.replace("/")
+      })
+      .catch(() => {
+        window.alert("failed to delete")
+      })
+  }, [deleteRequest, router])
+
   return (
     <React.Fragment>
-      <Box mb={3} maxWidth={120}>
-        <FormControl fullWidth>
-          <InputLabel htmlFor="sentiment_label">Filter</InputLabel>
-          <Select
-            id="sentiment_label"
-            value={label}
-            onChange={handleLabelChange}
-          >
-            {LABELS.map((label) => (
-              <MenuItem key={label} value={label}>
-                {label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="flex-end"
+        mb={3}
+      >
+        <Box maxWidth={120}>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="sentiment_label">Filter</InputLabel>
+            <Select
+              id="sentiment_label"
+              value={label}
+              onChange={handleLabelChange}
+            >
+              {LABELS.map((label) => (
+                <MenuItem key={label} value={label}>
+                  {label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+
+        <Box>
+          <Button onClick={handleDelete} size="small">
+            Delete
+          </Button>
+        </Box>
       </Box>
 
       {loading ? (
