@@ -1,7 +1,5 @@
 import { Entities } from "~/types/tweet"
-import escape from "lodash/escape"
 import sortBy from "lodash/sortBy"
-import { PermDeviceInformationOutlined } from "@material-ui/icons"
 
 interface URL {
   start: number
@@ -18,7 +16,7 @@ export function linkTweet(
   linkClass?: string
 ): string {
   if (!entities) {
-    return escape(rawText)
+    return rawText
   }
 
   let result = ""
@@ -28,7 +26,7 @@ export function linkTweet(
   urls.forEach((url) => {
     const urlBeginIndex = rawText.indexOf(url.text, beginIndex)
     if (urlBeginIndex === -1) return
-    result += escape(rawText.substring(beginIndex, urlBeginIndex))
+    result += rawText.substring(beginIndex, urlBeginIndex)
     if (!url.delete) {
       result += `<a${linkClass ? `class="${linkClass}"` : ""} href="${
         url.href
@@ -39,7 +37,7 @@ export function linkTweet(
     beginIndex = urlBeginIndex + url.text.length
   })
 
-  result += escape(rawText.substring(beginIndex, rawText.length))
+  result += rawText.substring(beginIndex, rawText.length)
 
   return result
 }
