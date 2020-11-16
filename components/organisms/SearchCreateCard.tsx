@@ -11,7 +11,7 @@ import useFetch from "use-http"
 
 function SearchCreateCard({ onCreate }: { onCreate: () => void }) {
   const [keyword, setKeyword, handleKeywordChange] = useInput("")
-  const { post, loading, error } = useFetch("/searches")
+  const { post } = useFetch("/searches")
   const handleSubmit = React.useCallback<
     React.EventHandler<React.FormEvent<HTMLFormElement>>
   >(

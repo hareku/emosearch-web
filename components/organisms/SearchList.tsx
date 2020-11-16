@@ -7,10 +7,8 @@ import {
   Card,
   CardContent,
   CardActionArea,
-  CardActions,
   Box,
   CircularProgress,
-  Button,
 } from "@material-ui/core"
 import SearchCreateCard from "~/components/organisms/SearchCreateCard"
 
