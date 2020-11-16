@@ -8,7 +8,7 @@ import {
   SvgIcon,
   colors,
 } from "@material-ui/core"
-import Link from "~/components/atoms/Link"
+import Link from "~/components/Link"
 import { Tweet } from "~/types/tweet"
 import InfiniteScroll from "react-infinite-scroller"
 import {
@@ -76,10 +76,27 @@ function Loader() {
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
-  const linkedTweet = React.useMemo(
+  const linkedTweet = React.useMemo<string>(
     () => linkTweet(tweet.Text, tweet.Entities),
     [tweet]
   )
+  const mp4Url = React.useMemo<string | null>(() => {
+    const video = tweet.Entities?.Media.find((m) => m.VideoInfo)
+    if (!video || !video.VideoInfo) return null
+
+    const cand: { bitrate: number; url: string | null } = {
+      bitrate: 0,
+      url: null,
+    }
+    video.VideoInfo.Variants.forEach((v) => {
+      if (v.ContentType === "video/mp4" && v.Bitrate > cand.bitrate) {
+        cand.bitrate = v.Bitrate
+        cand.url = v.URL
+      }
+    })
+
+    return cand.url
+  }, [tweet])
 
   return (
     <Box pt={1} pb={3} px={2} display="flex">
@@ -144,43 +161,25 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
 
-          {tweet.SentimentScore ? (
-            <Typography
-              style={{
-                wordWrap: "break-word",
-                whiteSpace: "pre-wrap",
-                marginTop: 4,
-              }}
-              color="textSecondary"
-            >
-              Positive:{" "}
-              {Math.round(tweet.SentimentScore.Positive * 1000) / 1000}
-              <br />
-              Negative:{" "}
-              {Math.round(tweet.SentimentScore.Negative * 1000) / 1000}
-              <br />
-              Mixed: {Math.round(tweet.SentimentScore.Mixed * 1000) / 1000}
-              <br />
-              Neutral: {Math.round(tweet.SentimentScore.Neutral * 1000) / 1000}
-            </Typography>
-          ) : null}
-          {tweet.Entities?.Media.map((medium, ind) => (
-            <Box mt={1} key={ind}>
-              {medium.VideoInfo && medium.VideoInfo.Variants.length > 0 ? (
-                <video
-                  src={medium.VideoInfo.Variants[0].URL}
-                  autoPlay={false}
-                  style={{ maxWidth: "100%", height: "auto" }}
-                  controls
-                />
-              ) : (
+          {mp4Url ? (
+            <Box mt={1}>
+              <video
+                src={mp4Url}
+                autoPlay={false}
+                style={{ maxWidth: "100%", height: "auto" }}
+                controls
+              />
+            </Box>
+          ) : tweet.Entities?.Media ? (
+            tweet.Entities?.Media.map((medium, ind) => (
+              <Box mt={1} key={ind}>
                 <img
                   src={medium.MediaURL}
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
-              )}
-            </Box>
-          ))}
+              </Box>
+            ))
+          ) : null}
         </Box>
       </Box>
     </Box>
