@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react"
-import TweetList from "~/components/organisms/TweetList"
+import TweetList from "~/components/TweetList"
 import {
   Select,
   MenuItem,
