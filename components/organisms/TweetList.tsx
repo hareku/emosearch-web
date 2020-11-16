@@ -76,10 +76,27 @@ function Loader() {
 }
 
 function TweetCard({ tweet }: { tweet: Tweet }) {
-  const linkedTweet = React.useMemo(
+  const linkedTweet = React.useMemo<string>(
     () => linkTweet(tweet.Text, tweet.Entities),
     [tweet]
   )
+  const mp4Url = React.useMemo<string | null>(() => {
+    const video = tweet.Entities?.Media.find((m) => m.VideoInfo)
+    if (!video || !video.VideoInfo) return null
+
+    const cand: { bitrate: number; url: string | null } = {
+      bitrate: 0,
+      url: null,
+    }
+    video.VideoInfo.Variants.forEach((v) => {
+      if (v.ContentType === "video/mp4" && v.Bitrate > cand.bitrate) {
+        cand.bitrate = v.Bitrate
+        cand.url = v.URL
+      }
+    })
+
+    return cand.url
+  }, [tweet])
 
   return (
     <Box pt={1} pb={3} px={2} display="flex">
@@ -144,23 +161,25 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
 
-          {tweet.Entities?.Media.map((medium, ind) => (
-            <Box mt={1} key={ind}>
-              {medium.VideoInfo && medium.VideoInfo.Variants.length > 0 ? (
-                <video
-                  src={medium.VideoInfo.Variants[0].URL}
-                  autoPlay={false}
-                  style={{ maxWidth: "100%", height: "auto" }}
-                  controls
-                />
-              ) : (
+          {mp4Url ? (
+            <Box mt={1}>
+              <video
+                src={mp4Url}
+                autoPlay={false}
+                style={{ maxWidth: "100%", height: "auto" }}
+                controls
+              />
+            </Box>
+          ) : tweet.Entities?.Media ? (
+            tweet.Entities?.Media.map((medium, ind) => (
+              <Box mt={1} key={ind}>
                 <img
                   src={medium.MediaURL}
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
-              )}
-            </Box>
-          ))}
+              </Box>
+            ))
+          ) : null}
         </Box>
       </Box>
     </Box>
