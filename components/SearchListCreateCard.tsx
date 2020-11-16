@@ -9,7 +9,11 @@ import TextField from "@material-ui/core/TextField"
 import { useInput } from "~/lib/hooks/form"
 import useFetch from "use-http"
 
-function SearchCreateCard({ onCreate }: { onCreate: () => void }) {
+export default function SearchListCreateCard({
+  onCreate,
+}: {
+  onCreate: () => void
+}) {
   const [keyword, setKeyword, handleKeywordChange] = useInput("")
   const { post } = useFetch("/searches")
   const handleSubmit = React.useCallback<
@@ -56,5 +60,3 @@ function SearchCreateCard({ onCreate }: { onCreate: () => void }) {
     </Card>
   )
 }
-
-export default SearchCreateCard

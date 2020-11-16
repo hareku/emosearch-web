@@ -10,15 +10,12 @@ import {
   Box,
   CircularProgress,
 } from "@material-ui/core"
-import SearchCreateCard from "~/components/organisms/SearchCreateCard"
+import SearchListCreateCard from "./SearchListCreateCard"
 
 export default function SearchList() {
   const { get: reload, loading, error, data: searches = [] } = useFetch<
     Search[]
   >("/searches", { cachePolicy: CachePolicies.NO_CACHE }, [])
-  const handleReload = React.useCallback(() => {
-    reload()
-  }, [reload])
 
   if (loading) {
     return (
@@ -41,13 +38,19 @@ export default function SearchList() {
       ))}
 
       <Box mt={3}>
-        <SearchCreateCard onCreate={handleReload} />
+        <SearchListCreateCard onCreate={reload} />
       </Box>
     </React.Fragment>
   )
 }
 
 function SearchCard({ search }: { search: Search }) {
+  const updatedAtText = React.useMemo<string | null>(() => {
+    if (!search.LastSearchUpdatedAt) return null
+    const date = new Date(Date.parse(search.LastSearchUpdatedAt))
+    return date.toLocaleString()
+  }, [search.LastSearchUpdatedAt])
+
   return (
     <Card>
       <CardActionArea>
@@ -61,7 +64,7 @@ function SearchCard({ search }: { search: Search }) {
             </Typography>
             <Typography color="textSecondary">
               {search.LastSearchUpdatedAt
-                ? `Updated: ${search.LastSearchUpdatedAt}`
+                ? `Updated: ${updatedAtText}`
                 : "Please wait a minute for the update."}
             </Typography>
           </CardContent>
