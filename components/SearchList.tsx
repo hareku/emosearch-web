@@ -1,5 +1,5 @@
 import React from "react"
-import Link from "~/components/atoms/Link"
+import Link from "~/components/Link"
 import useFetch, { CachePolicies } from "use-http"
 import { Search } from "~/types/search"
 import {

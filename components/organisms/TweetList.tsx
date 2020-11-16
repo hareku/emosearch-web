@@ -8,7 +8,7 @@ import {
   SvgIcon,
   colors,
 } from "@material-ui/core"
-import Link from "~/components/atoms/Link"
+import Link from "~/components/Link"
 import { Tweet } from "~/types/tweet"
 import InfiniteScroll from "react-infinite-scroller"
 import {
