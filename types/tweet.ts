@@ -1,5 +1,4 @@
 interface SentimentScore {
-  Mixed: number
   Negative: number
   Neutral: number
   Positive: number

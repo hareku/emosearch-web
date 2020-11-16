@@ -144,26 +144,6 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
             dangerouslySetInnerHTML={{ __html: linkedTweet }}
           ></Typography>
 
-          {tweet.SentimentScore ? (
-            <Typography
-              style={{
-                wordWrap: "break-word",
-                whiteSpace: "pre-wrap",
-                marginTop: 4,
-              }}
-              color="textSecondary"
-            >
-              Positive:{" "}
-              {Math.round(tweet.SentimentScore.Positive * 1000) / 1000}
-              <br />
-              Negative:{" "}
-              {Math.round(tweet.SentimentScore.Negative * 1000) / 1000}
-              <br />
-              Mixed: {Math.round(tweet.SentimentScore.Mixed * 1000) / 1000}
-              <br />
-              Neutral: {Math.round(tweet.SentimentScore.Neutral * 1000) / 1000}
-            </Typography>
-          ) : null}
           {tweet.Entities?.Media.map((medium, ind) => (
             <Box mt={1} key={ind}>
               {medium.VideoInfo && medium.VideoInfo.Variants.length > 0 ? (
