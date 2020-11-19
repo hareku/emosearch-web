@@ -6,15 +6,6 @@ import useFetch from "use-http"
 
 export function useAuthState(): [firebase.User | undefined, boolean] {
   const [user, loading] = useFirebaseAuthState(getAuth())
-
-  // TODO: check whether user is resigstered
-  // const { get: verifyRegistration } = useFetch("/users/@me")
-  // React.useEffect(() => {
-  //   if(!loading && user) {
-  //     verifyRegistration().catch(() => logout())
-  //   }
-  // }, [loading, user])
-
   return [user, loading]
 }
 
