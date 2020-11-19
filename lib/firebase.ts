@@ -23,6 +23,6 @@ export function loginWithTwitter() {
   return firebase.auth().signInWithPopup(provider)
 }
 
-export async function logout() {
+export function logout() {
   return firebase.auth().signOut()
 }
