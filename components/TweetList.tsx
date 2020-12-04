@@ -5,17 +5,12 @@ import {
   Avatar,
   CircularProgress,
   Typography,
-  SvgIcon,
   colors,
+  Chip,
 } from "@material-ui/core"
 import Link from "~/components/Link"
 import { Tweet } from "~/types/tweet"
 import InfiniteScroll from "react-infinite-scroller"
-import {
-  SentimentDissatisfied,
-  SentimentSatisfied,
-  SentimentVerySatisfied,
-} from "@material-ui/icons"
 import { linkTweet } from "~/lib/link-tweet"
 
 interface Data {
@@ -140,17 +135,26 @@ function TweetCard({ tweet }: { tweet: Tweet }) {
           {tweet.SentimentScore ? (
             <div style={{ marginLeft: "auto" }}>
               {tweet.SentimentLabel === "POSITIVE" ? (
-                <SvgIcon color="primary">
-                  <SentimentVerySatisfied />
-                </SvgIcon>
+                <Chip
+                  color="primary"
+                  size="small"
+                  variant="outlined"
+                  label={`${Math.round(tweet.SentimentScore.Positive * 100)}%`}
+                />
               ) : tweet.SentimentLabel === "NEGATIVE" ? (
-                <SvgIcon color="error">
-                  <SentimentDissatisfied />
-                </SvgIcon>
+                <Chip
+                  color="secondary"
+                  size="small"
+                  variant="outlined"
+                  label={`${Math.round(tweet.SentimentScore.Negative * 100)}%`}
+                />
               ) : (
-                <SvgIcon color="disabled">
-                  <SentimentSatisfied />
-                </SvgIcon>
+                <Chip
+                  color="default"
+                  size="small"
+                  variant="outlined"
+                  label={`${Math.round(tweet.SentimentScore.Neutral * 100)}%`}
+                />
               )}
             </div>
           ) : null}
